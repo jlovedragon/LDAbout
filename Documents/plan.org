@@ -1,0 +1,9 @@
+#+TITLE: Planning
+#+AUTHOR: Quentin_Hsu
+#+DATE: <2014-11-21 Fri>
+
++ 具备基本概率论的知识。
++ PRML的前两章和Graphic Model那部分需要浏览一下，了解以下所谓的贝叶斯学派的方法论，然后理解共轭先验的概念，以及Graphic Model的图形表达的意思。
++ 了解一下Gibbs Sampling的概念
++ 直接读Steyvers的Probabilistic Topic Models，没必要一定去读Blei的论文，开创性的论文不一定好读，最典型的例子就是Paxos了，30多页里多少都是希腊人名，对于英文不够精通，学术训练比较少的工程师来说，其实很痛苦，意义也不大。
++ 对照着Probabilistic Topic Models直接看LdaGibbsSampling.java的源码
