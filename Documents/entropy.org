@@ -6,3 +6,4 @@
 *** 定义
     对于任意一个随机变量X : H(X) = -∑P(x)logP(x)
     变量的不确定性越大，熵也就越大。
+    [[/home/quentin/D]]ownloads/test.jpg
