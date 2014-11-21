@@ -1,0 +1,55 @@
+#+TITLE: Bayes Learning
+#+AUTHOR: Quentin_Hsu
+#+DATE: <2014-11-20 Thu>
+
+贝叶斯推理提供了推理的一种概率手段。它基于如下的假设，即待考查的量遵循莫概率分布，且可根据这些概率及已观察到的数据进行推理，以作出最优的决策。
+* 贝叶斯学习方法的特性包括
+  + 观察到的每个训练样例可以增量地降低或者升高莫假设的估计概率。
+  + 先验知识可以与观察数据一起决定假设的最终概率。先验知识的形成可以是，每个候选假设的先验概率，或者是每个可能假设在观察数据上的概率分布。
+  + 贝叶斯方法可允许假设做出不确定性的预测（比如这样的假设：这一肺炎病人有90%的机会康复）
+  + 新的实例分类可由多个假设一起作出预测，用它们的概率来加权。
+  + 即使在贝叶斯方法计算复杂度较高时，它们也可作为一个最优的决策的标准衡量其他方法。
+  在实践中应用贝叶斯方法的难度之一在于，它们需要概率的初始知识。
+
+* GIBBS算法
+定义如下：
+  + 按照H上的后验概率分布，从H中随机选择假设h
+  + 使用h来预言下一实例x的分类
+当有一待分类新实例时，Gibbs算法简单地按照当前的后验概率分布使用一随机抽取假设。
+
+* 朴素贝叶斯分类器 (naive Bayes classifier)
+朴素贝叶斯分类器基于一个简单的假定：在给定目标值时属性值之间相互条件独立。换言之，该假定说明在给定实例的目标值情况下，观察到联合的a1，a2...an的概率等于每个单独属性的概率乘积。
+
+** 举例
+| Day | Outlook  | Temperature | Humidity | Wind   | PlayTennis |
+|-----+----------+-------------+----------+--------+------------|
+| D1  | Sunny    | Hot         | High     | Weak   | No         |
+| D2  | Sunny    | Hot         | High     | Strong | No         |
+| D3  | Overcast | Hot         | High     | Weak   | Yes        |
+| D4  | Rain     | Mild        | High     | Weak   | Yes        |
+| D5  | Rain     | Cool        | Normal   | Weak   | Yes        |
+| D6  | Rain     | Cool        | Normal   | Strong | No         |
+| D7  | Overcast | Cool        | Normal   | Strong | Yes        |
+| D8  | Sunny    | Mild        | High     | Weak   | No         |
+| D9  | Sunny    | Cool        | Normal   | Weak   | Yes        |
+| D10 | Rain     | Mild        | Normal   | Weak   | Yes        |
+| D11 | Sunny    | Mild        | Normal   | Strong | Yes        |
+| D12 | Overcast | Mild        | High     | Strong | Yes        |
+| D13 | Overcast | Hot         | Normal   | Weak   | Yes        |
+| D14 | Rain     | Mild        | High     | Strong | No         |
+|-----+----------+-------------+----------+--------+------------|
+根据表中的数据结合朴素贝叶斯分类器来分类下面的新实例：
+<Outlook = sunny, Temperature = cool, Humidity = high, Wind = strong>
+P(PlayTennis=yes) = 9/14
+P(PlayTennis=no) = 5/14
+P(yes)P(sunny|yes)P(cool|yes)P(high|yes)P(strong|yes) = (9/14) * (2/9) * (3/9) * (3/9) * (3/9) = 0.00529
+P(no)P(sunny|no)P(cool|no)P(high|no)P(strong|no = (5/14) * (3/5) * (1/5) * (4/5) * (3/5) = 0.02057
+p(no|sunny,cool,high,strong) = 0.02057 / (0.02057 + 0.00529) = 79.54%
+
+** 问题
+nc/n，当nc很小而n较大时，nc/n趋近于0，则其它所有概率项都要乘以此0值，造成估计较差。
+
+** 解决办法
+提出了一种估计概率的贝叶斯方法，m-估计：
+(nc + mp) / (n + m)
+其中，p是将要确定的概率的先验估计，m是一称为等效样本大小的常量，这个式子可以解释为：将n个实际的观察扩大，加上m个按p分布的虚拟样本。
