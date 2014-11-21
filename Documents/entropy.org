@@ -6,4 +6,15 @@
 *** 定义
    - 对于任意一个随机变量X : H(X) = -∑P(x)logP(x)
    - 变量的不确定性越大，熵也就越大。
-    
+*** 条件熵 (Conditional Entropy)
+   - H(X|Y) = -∑P(x,y)P(x|y)
+*信息的作用在于消除不确定性，自然语言处理的大量问题就是找相关信息。*
+*** 互信息 (Mutual Information)
+  - I(X;Y) = ∑P(x,y)log(P(x,y)/P(x)P(y))
+  - 互信息是一个取值在0到min(H(X),H(Y))之间的函数，当X和Y完全相关时，它的取值是1；当两者完全无关时，它的取值是0。
+*** 相对熵 (Kullback-Leibler Divergence)
+  - 是以它的两个提出者库尔贝克和莱伯勒的名字命名的，还被称为(Information Divergence,Information Gain,Relative Entropy)
+  - KL(f(x)||g(x)) = ∑f(x)log(f(x)/g(x))
+    1. 对于两个完全相同的函数，它们的相对熵等于零。
+    2. 相对熵越大，两个函数差异越大；反之，相对熵越小，两个函数差异越小。
+    3. 对于概率分布或者概率密度函数，如果取值均大于零，相对熵可以度量两个随机分布的差异性。
