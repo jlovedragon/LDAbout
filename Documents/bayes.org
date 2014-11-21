@@ -39,12 +39,12 @@
 | D14 | Rain     | Mild        | High     | Strong | No         |
 |-----+----------+-------------+----------+--------+------------|
 根据表中的数据结合朴素贝叶斯分类器来分类下面的新实例：
-<Outlook = sunny, Temperature = cool, Humidity = high, Wind = strong>
-P(PlayTennis=yes) = 9/14
-P(PlayTennis=no) = 5/14
-P(yes)P(sunny|yes)P(cool|yes)P(high|yes)P(strong|yes) = (9/14) * (2/9) * (3/9) * (3/9) * (3/9) = 0.00529
-P(no)P(sunny|no)P(cool|no)P(high|no)P(strong|no = (5/14) * (3/5) * (1/5) * (4/5) * (3/5) = 0.02057
-p(no|sunny,cool,high,strong) = 0.02057 / (0.02057 + 0.00529) = 79.54%
++ <Outlook = sunny, Temperature = cool, Humidity = high, Wind = strong> ?
++ P(PlayTennis=yes) = 9/14
++ P(PlayTennis=no) = 5/14
++ P(yes)P(sunny|yes)P(cool|yes)P(high|yes)P(strong|yes) = (9/14) * (2/9) * (3/9) * (3/9) * (3/9) = 0.00529
++ P(no)P(sunny|no)P(cool|no)P(high|no)P(strong|no = (5/14) * (3/5) * (1/5) * (4/5) * (3/5) = 0.02057
++ p(no|sunny,cool,high,strong) = 0.02057 / (0.02057 + 0.00529) = 79.54%
 
 ** 问题
 nc/n，当nc很小而n较大时，nc/n趋近于0，则其它所有概率项都要乘以此0值，造成估计较差。
