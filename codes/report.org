@@ -1,0 +1,97 @@
+#+TITLE: Report
+#+AUTHOR: Quan Xu
+#DATE: <2014-12-18 Thu>
+
+* 英文Twitter提取主题
+** 数据预处理
+*** 原始语料
+数据原始为100万条twitter
+*** 步骤
+1. 拿到要处理的字段:linelist[2]
+2. 去除掉除英文外的其他语言的twitter
+3. 去掉标点符号、停用词、http超链接等
+*** 结果
+处理完的数据还剩下591707条，所花时间大概5分钟
+
+** LDA提取主题
+*** 步骤
+1. 读取文件，设定需要提取的主题数K，构建词典，为每条twitter的每个word随机分配topic
+2. 进行关键数据结构的初始化:
+   nw[i][j]: 词汇i指派给主题j的个数
+   nd[i][j]: 文档i中指派给主题j的单词个数
+   nwsum[k]: 指派给主题k的单词个数
+   ndsum[k]: 文档k的单词个数
+3. 用Gibbs方法进行循环采样，采用公式计算出重要参数:
+   Theta[M][K]:每个文档的主题分布
+   Phi[V][K]:每个主题的词汇分布
+   Z[M][N]:每个文档中每个词的所属主题
+*** 结果
+1. 循环1000次，设定找10个主题以及主题最相关的20个词，所花时间大概20分钟，效果如表1
+2. 对算法进行改进，加入burn-in与samplelag，加入burn-in是为了得到平稳分布之后再采样，加入samplelag是为了消除相邻两次采样的相关性
+   并加大循环次数为10000次，burn-in为2000次，samplelag为10，在服务器上跑了大概3个小时20分钟，所得结果如表2
+
+**** 表1
+|    | 0         | 1      | 2        | 3           | 4         | 5         | 6       | 7    | 8         | 9    |
+|----+-----------+--------+----------+-------------+-----------+-----------+---------+------+-----------+------|
+|  1 | video     | news   | twitter  | daily       | free      | day       | jobs    | de   | blog      | live |
+|  2 | check     | game   | facebook | twittascope | iphone    | spymaster | news    | la   | post      | hey  |
+|  3 | music     | obama  | check    | photo       | online    | sale      | job     | en   | read      | love |
+|  4 | playing   | air    | site     | flu         | money     | followers | city    | el   | life      | lol  |
+|  5 | listen    | red    | google   | win         | marketing | house     | san     | van  | directory | dont |
+|  6 | movie     | lakers | follow   | vote        | business  | level     | health  | los  | reading   | pic  |
+|  7 | listening | car    | join     | swine       | social    | check     | sales   | tv   | book      | gt   |
+|  8 | watching  | win    | link     | food        | media     | free      | manager | para | tips      | haha |
+|  9 | youtubu   | cup    | free     | time        | internet  | reached   | united  | da   | people    | cute |
+| 10 | watch     | women  | search   | die         | web       | attempt   | real    | op   | health    | guys |
+|----+-----------+--------+----------+-------------+-----------+-----------+---------+------+-----------+------|
+
+**** 表2
+|    | 0        | 1     | 2            | 3     | 4    | 5             | 6         | 7         | 8        | 9               |
+|----+----------+-------+--------------+-------+------+---------------+-----------+-----------+----------+-----------------|
+|  1 | blog     | june  | daily        | love  | de   | game          | twitter   | playing   | jobs     | live            |
+|  2 | post     | flu   | twitteascope | day   | la   | win           | free      | music     | job      | hey             |
+|  3 | facebook | car   | check        | lol   | en   | spymaster     | online    | love      | news     | iphone          |
+|  4 | news     | news  | video        | dont  | el   | red           | followers | song      | san      | free            |
+|  5 | obama    | swine | photo        | time  | van  | friday        | money     | tonight   | sales    | souljaboytellem |
+|  6 | health   | air   | twitter      | pic   | los  | lakers        | markering | listen    | manager  | offer           |
+|  7 | url      | city  | posted       | cute  | da   | cup           | web       | girl      | real     | gt              |
+|  8 | care     | day   | youtubu      | nice  | die  | attempt       | site      | hot       | business | windows         |
+|  9 | bill     | sale  | watch        | haha  | para | assassination | social    | video     | market   | apple           |
+| 10 | read     | house | level        | happy | op   | new           | business  | listening | united   | petition        |
+|----+----------+-------+--------------+-------+------+---------------+-----------+-----------+----------+-----------------|
+  
+
+  
+* 中文新闻提取主题
+** 数据预处理
+*** 原始语料
+来源于SOHU新闻网站保存的大量经过编辑手工整理与分类的新闻语料与对应的分类信息，采用了旅游、教育、军事共30个文本进行分析
+*** 步骤
+PYTHON最强大的除了它的第三方库之外，应该就属对字符串的处理了，以前我对此深信不疑，结果发现，在对中文的处理上，PYTHON2还是有很大的欠缺
+1. 中文不同于英文，首先要设定PYTHON的默认编解码方式为UTF-8，读取文件后，首先第一步是要进行分词，我采用的是PYTHON的开源第三方库JIEBA
+2. 去掉英文符号与数字
+3. 去掉中文符号，要先把中文符号解码为UTF-8，然后进行比较
+4. 去掉中文停用词，首先需要将每个词编码为UTF-8，然后进行比较
+5. 最后要写入的字符编码为UTF-8，再写入文件
+BTW：因为PYTHON2默认的编码方式是ASCII，会对中文的处理造成很多不方便，处理之前都要转换成UNICODE，好在PYTHON3已经意识到了这个问题，所以PYTHON3的默认编码方式是UNICODE
+*** 结果
+因为总共只有30个100-200个词的新闻文本，处理非常快，只需要短短的3-5秒
+
+** LDA提取主题
+*** 步骤
+因为LDA采用的是词袋模型，故算法与具体的语言无关，步骤和英文的一样
+*** 结果
+1. 循环1000次，设定找3个主题已经主题最相关的20个词，所花时间大概6秒，效果可以
+2. 同英文一样的改进，加入BURN-IN、SAMPLELAG，循环10000次，所花时间大概40秒，效果和之前的差不多
+*** 分析原因
+效果虽然都还不错，但是两次结果差不多，主要是语料太少，区分度不明显
+
+
+* 下一步计划 
+*** 自己写爬虫爬新浪微博
+*** 针对LDA不适合处理短文本的特性来改进算法，初步设想加入作者的主题分布和对转发微博的处理，大致思路如下：
+    _如果一条微博是原创微博，其主题由作者的主题分布中抽取_
+    _如果是转发微博，则由转发部分的主题确定_
+
+
+    
